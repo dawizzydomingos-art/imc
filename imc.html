@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculadora de IMC - Modo Escuro (Dawizzy Edition)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      margin: 0;
+      padding: 20px;
+      color: #e2e8f0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border: 1px solid #334155;
+    }
+    h1 {
+      text-align: center;
+      color: #60a5fa;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+      color: #cbd5e1;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #475569;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #0f172a;
+      color: #e2e8f0;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #64748b;
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23cbd5e1' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+    }
+    #resultado {
+      margin-top: 30px;
+      padding: 20px;
+      border-radius: 10px;
+      background: #111827;
+      border: 1px solid #374151;
+      text-align: center;
+      min-height: 120px;
+      display: none;
+    }
+    .classificacao {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+    .boa { color: #34d399; }
+    .atencao { color: #fbbf24; }
+    .alerta { color: #f87171; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Calculadora de IMC</h1>
+  <p class="subtitle">Modo Escuro – Dawizzy Style 🌙</p>
+
+  <label for="peso">Peso atual (kg):</label>
+  <input type="number" id="peso" step="0.1" min="20" max="300" placeholder="Ex: 78.5">
+
+  <label for="altura">Altura (cm):</label>
+  <input type="number" id="altura" min="100" max="250" placeholder="Ex: 175">
+
+  <label for="idade">Idade (anos):</label>
+  <input type="number" id="idade" min="10" max="120" placeholder="Ex: 28">
+
+  <label for="sexo">Sexo biológico:</label>
+  <select id="sexo">
+    <option value="">Selecione...</option>
+    <option value="homem">Homem</option>
+    <option value="mulher">Mulher</option>
+  </select>
+
+  <button onclick="calcularIMC()">Calcular IMC</button>
+
+  <div id="resultado">
+    <h2>Resultado:</h2>
+    <div id="imc-valor"></div>
+    <div id="classificacao" class="classificacao"></div>
+    <div id="mensagem"></div>
+  </div>
+</div>
+
+<script>
+function calcularIMC() {
+  const peso = parseFloat(document.getElementById("peso").value);
+  const alturaCm = parseFloat(document.getElementById("altura").value);
+  const idade = parseInt(document.getElementById("idade").value);
+  const sexo = document.getElementById("sexo").value;
+
+  if (!peso || !alturaCm || !idade || !sexo) {
+    alert("Preencha todos os campos corretamente! ⚠️");
+    return;
+  }
+
+  const altura = alturaCm / 100;
+  const imc = peso / (altura * altura);
+  const imcFormatado = imc.toFixed(2);
+
+  let classificacao = "";
+  let cor = "";
+  let mensagem = "";
+
+  if (imc < 18.5) {
+    classificacao = "Abaixo do peso";
+    cor = "boa";
+    mensagem = "Você está abaixo do peso ideal. Considere falar com um nutricionista. 💪🥑";
+  } else if (imc < 25) {
+    classificacao = "Peso normal";
+    cor = "boa";
+    mensagem = "Parabéns! Faixa saudável 🎉 Continue assim!";
+  } else if (imc < 30) {
+    classificacao = "Sobrepeso";
+    cor = "atencao";
+    mensagem = "Sobrepeso. Pequenas mudanças já fazem diferença!";
+  } else if (imc < 35) {
+    classificacao = "Obesidade grau I";
+    cor = "alerta";
+    mensagem = "Obesidade grau I. Vale buscar orientação profissional ❤️";
+  } else if (imc < 40) {
+    classificacao = "Obesidade grau II";
+    cor = "alerta";
+    mensagem = "Obesidade grau II. Procure ajuda médica/nutricional.";
+  } else {
+    classificacao = "Obesidade grau III";
+    cor = "alerta";
+    mensagem = "Obesidade grau III (mórbida). Acompanhamento médico urgente.";
+  }
+
+  // Ajuste leve para mulheres > 50 anos
+  if (sexo === "mulher" && idade > 50 && imc >= 25 && imc < 28) {
+    mensagem += "\n\n(Após os 50 anos, um IMC um pouco mais alto pode ser mais aceitável)";
+  }
+
+  document.getElementById("imc-valor").innerHTML = `Seu IMC: <b>${imcFormatado}</b>`;
+  const classeElem = document.getElementById("classificacao");
+  classeElem.textContent = classificacao;
+  classeElem.className = "classificacao " + cor;
+
+  document.getElementById("mensagem").textContent = mensagem;
+  document.getElementById("resultado").style.display = "block";
+}
+</script>
+
+</body>
+</html>
